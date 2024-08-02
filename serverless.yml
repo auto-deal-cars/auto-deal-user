@@ -1,0 +1,85 @@
+service: auto-deal-user
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  ecr:
+    images:
+      user:
+        path: ./
+        platform: linux/arm64
+  stage: dev
+  region: us-east-1
+  runtime: python3.10
+  timeout: 30
+  deploymentMethod: direct
+  environment:
+    ADMIN_PERMISSIONS: ${env.ADMIN_PERMISSIONS}
+    BUYER_PERMISSIONS: ${env.BUYER_PERMISSIONS}
+    AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
+    AUDIENCE_CLIENT_ID: ${env.AUDIENCE_CLIENT_ID}
+    COGNITO_ARN: ${env.COGNITO_ARN}
+  httpApi:
+    cors: true
+    authorizers:
+      autoDealAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: ${env.AUDIENCE_ISSUER_URL}
+        audience:
+          - ${env.AUDIENCE_CLIENT_ID}
+  dotenv: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - cognito-idp:AdminCreateUser
+            - cognito-idp:AdminGetUser
+            - cognito-idp:AdminInitiateAuth
+            - cognito-idp:AdminSetUserPassword
+            - cognito-idp:AdminDeleteUser
+            - cognito-idp:AdminAddUserToGroup
+          Resource: ${env.COGNITO_ARN}
+  architecture: arm64
+
+functions:
+  preTokenGeneration:
+    image:
+      name: user
+      command: ["user.adapters.controllers.pre_token_generator_controller.lambda_handler"]
+    events:
+      - cognitoUserPool:
+          pool: auto-deal-api
+          trigger: PreTokenGeneration
+          existing: true
+  create_user:
+    image:
+      name: user
+    events:
+      - httpApi:
+          path: /user
+          method: post
+  login_user:
+    image:
+      name: user
+      command: ["user.adapters.controllers.login_user_controller.login_user"]
+    events:
+      - httpApi:
+          path: /login
+          method: post
+  delete_user:
+    image:
+      name: user
+      command: ["user.adapters.controllers.delete_user_controller.delete_user"]
+    events:
+      - httpApi:
+          path: /user
+          method: delete
+          authorizer:
+            name: autoDealAuthorizer
+            scopes: ["delete:user"]
+
+resources:
+  # Cognito
+  - ${file(resources/cognito-user-pool.yml)}

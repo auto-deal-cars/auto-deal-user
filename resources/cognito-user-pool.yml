@@ -1,0 +1,66 @@
+Resources:
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: auto-deal-api
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      Schema:
+        - Name: user_details
+          AttributeDataType: String
+          Mutable: true
+        - Name: address
+          AttributeDataType: String
+          Mutable: true
+      LambdaConfig:
+        PreTokenGeneration: 
+          Fn::GetAtt: [PreTokenGenerationLambdaFunction, Arn]
+
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: auto-deal-api
+      UserPoolId:
+        Ref: CognitoUserPool
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+      GenerateSecret: false
+      SupportedIdentityProviders:
+        - COGNITO
+      AllowedOAuthFlows:
+        - code
+        - implicit
+      AllowedOAuthScopes:
+        - openid
+        - profile
+        - email
+      AllowedOAuthFlowsUserPoolClient: true
+      CallbackURLs:
+        - https://example.com
+
+  CognitoUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId:
+        Ref: CognitoUserPool
+      Domain: 'auto-deal-api'
+
+  CognitoUserGroupAdmin:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: Admin
+      UserPoolId:
+        Ref: CognitoUserPool
+      Precedence: 1
+
+  CognitoUserGroupBuyer:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: Buyer
+      UserPoolId:
+        Ref: CognitoUserPool
+      Precedence: 2
