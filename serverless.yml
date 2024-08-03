@@ -1,6 +1,8 @@
 service: auto-deal-user
 frameworkVersion: '3'
 
+useDotenv: true
+
 provider:
   name: aws
   ecr:
@@ -28,7 +30,6 @@ provider:
         issuerUrl: ${env.AUDIENCE_ISSUER_URL}
         audience:
           - ${env.AUDIENCE_CLIENT_ID}
-  dotenv: true
   iam:
     role:
       statements:
