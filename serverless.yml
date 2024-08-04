@@ -38,13 +38,13 @@ provider:
     BUYER_GROUP_NAME: ${self:custom.buyerGroupName}
   httpApi:
     cors: true
-    # authorizers:
-    #   autoDealAuthorizer:
-    #     type: jwt
-    #     identitySource: $request.header.Authorization
-    #     issuerUrl: ${self:custom.audienceIssuerUrl}
-    #     audience:
-    #       - ${self:custom.audienceClientId}
+    authorizers:
+      autoDealAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: ${self:custom.audienceIssuerUrl}
+        audience:
+          - ${self:custom.audienceClientId}
   iam:
     role:
       statements:
@@ -92,9 +92,9 @@ functions:
       - httpApi:
           path: /user
           method: delete
-          # authorizer:
-          #   name: autoDealAuthorizer
-          #   scopes: ["delete:user"]
+          authorizer:
+            name: autoDealAuthorizer
+            scopes: ["delete:user"]
 
 resources:
   # Cognito
