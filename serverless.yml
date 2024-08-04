@@ -3,6 +3,17 @@ frameworkVersion: '3'
 
 useDotenv: true
 
+custom:
+  audienceIssuerUrl: ${file(env.json):AUDIENCE_ISSUER_URL}
+  audienceClientId: ${file(env.json):AUDIENCE_CLIENT_ID}
+  cognitoArn: ${file(env.json):COGNITO_ARN}
+  cognitoUserPoolId: ${file(env.json):COGNITO_USER_POOL_ID}
+  authFlow: ${file(env.json):AUTH_FLOW}
+  adminGroupName: ${file(env.json):ADMIN_GROUP_NAME}
+  buyerGroupName: ${file(env.json):BUYER_GROUP_NAME}
+  adminPermissions: ${file(env.json):ADMIN_PERMISSIONS}
+  buyerPermissions: ${file(env.json):BUYER_PERMISSIONS}
+
 provider:
   name: aws
   ecr:
@@ -16,20 +27,24 @@ provider:
   timeout: 30
   deploymentMethod: direct
   environment:
-    ADMIN_PERMISSIONS: ${env:ADMIN_PERMISSIONS}
-    BUYER_PERMISSIONS: ${env:BUYER_PERMISSIONS}
-    AUDIENCE_ISSUER_URL: ${env:AUDIENCE_ISSUER_URL}
-    AUDIENCE_CLIENT_ID: ${env:AUDIENCE_CLIENT_ID}
-    COGNITO_ARN: ${env:COGNITO_ARN}
+    ADMIN_PERMISSIONS: ${self:custom.adminPermissions}
+    BUYER_PERMISSIONS: ${self:custom.buyerPermissions}
+    COGNITO_ARN: ${self:custom.cognitoArn}
+    AUDIENCE_ISSUER_URL: ${self:custom.audienceIssuerUrl}
+    AUDIENCE_CLIENT_ID: ${self:custom.audienceClientId}
+    COGNITO_USER_POOL_ID: ${self:custom.cognitoUserPoolId}
+    AUTH_FLOW: ${self:custom.authFlow}
+    ADMIN_GROUP_NAME: ${self:custom.adminGroupName}
+    BUYER_GROUP_NAME: ${self:custom.buyerGroupName}
   httpApi:
     cors: true
     authorizers:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: ${env:AUDIENCE_ISSUER_URL}
+        issuerUrl: ${self:custom.audienceIssuerUrl}
         audience:
-          - ${env:AUDIENCE_CLIENT_ID}
+          - ${self:custom.audienceClientId}
   iam:
     role:
       statements:
@@ -41,7 +56,7 @@ provider:
             - cognito-idp:AdminSetUserPassword
             - cognito-idp:AdminDeleteUser
             - cognito-idp:AdminAddUserToGroup
-          Resource: ${env:COGNITO_ARN}
+          Resource: ${self:custom.cognitoArn}
   architecture: arm64
 
 functions:
