@@ -3,6 +3,11 @@ frameworkVersion: '3'
 
 useDotenv: true
 
+custom:
+  cognitoArn: ${env:COGNITO_ARN}
+  audienceIssuerUrl: ${env:AUDIENCE_ISSUER_URL}
+  audienceClientId: ${env:AUDIENCE_CLIENT_ID}
+
 provider:
   name: aws
   ecr:
@@ -18,18 +23,18 @@ provider:
   environment:
     ADMIN_PERMISSIONS: ${env:ADMIN_PERMISSIONS}
     BUYER_PERMISSIONS: ${env:BUYER_PERMISSIONS}
-    AUDIENCE_ISSUER_URL: ${env:AUDIENCE_ISSUER_URL}
-    AUDIENCE_CLIENT_ID: ${env:AUDIENCE_CLIENT_ID}
-    COGNITO_ARN: ${env:COGNITO_ARN}
+    COGNITO_ARN: ${self:custom.cognitoArn}
+    AUDIENCE_ISSUER_URL: ${self:custom.audienceIssuerUrl}
+    AUDIENCE_CLIENT_ID: ${self:custom.audienceClientId}
   httpApi:
     cors: true
     authorizers:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: ${env:AUDIENCE_ISSUER_URL}
+        issuerUrl: ${self:custom.audienceIssuerUrl}
         audience:
-          - ${env:AUDIENCE_CLIENT_ID}
+          - ${self:custom.audienceClientId}
   iam:
     role:
       statements:
@@ -41,7 +46,7 @@ provider:
             - cognito-idp:AdminSetUserPassword
             - cognito-idp:AdminDeleteUser
             - cognito-idp:AdminAddUserToGroup
-          Resource: ${env:COGNITO_ARN}
+          Resource: ${self:custom.cognitoArn}
   architecture: arm64
 
 functions:
