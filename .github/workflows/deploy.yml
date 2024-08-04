@@ -30,29 +30,19 @@ jobs:
       run: |
         pytest
 
-    - name: Create envfile
-      uses: SpicyPizza/create-envfile@v2.0
-      with:
-        envkey_AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
-        envkey_AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
-        envkey_COGNITO_ARN: ${{ secrets.COGNITO_ARN }}
-        envkey_COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
-        envkey_AUTH_FLOW: ${{ secrets.AUTH_FLOW }}
-        envkey_ADMIN_GROUP_NAME: ${{ secrets.ADMIN_GROUP_NAME }}
-        envkey_BUYER_GROUP_NAME: ${{ secrets.BUYER_GROUP_NAME }}
-        envkey_ADMIN_PERMISSIONS: ${{ secrets.ADMIN_PERMISSIONS }}
-        envkey_BUYER_PERMISSIONS: ${{ secrets.BUYER_PERMISSIONS }}
-        file_name: .env
-      env:
-        AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
-        AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
-        COGNITO_ARN: ${{ secrets.COGNITO_ARN }}
-        COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
-        AUTH_FLOW: ${{ secrets.AUTH_FLOW }}
-        ADMIN_GROUP_NAME: ${{ secrets.ADMIN_GROUP_NAME }}
-        BUYER_GROUP_NAME: ${{ secrets.BUYER_GROUP_NAME }}
-        ADMIN_PERMISSIONS: ${{ secrets.ADMIN_PERMISSIONS }}
-        BUYER_PERMISSIONS: ${{ secrets.BUYER_PERMISSIONS }}
+    - name: Create env.json file
+      run: |
+        echo '{
+          "AUDIENCE_ISSUER_URL": "${{ secrets.AUDIENCE_ISSUER_URL }}",
+          "AUDIENCE_CLIENT_ID": "${{ secrets.AUDIENCE_CLIENT_ID }}",
+          "COGNITO_ARN": "${{ secrets.COGNITO_ARN }}",
+          "COGNITO_USER_POOL_ID": "${{ secrets.COGNITO_USER_POOL_ID }}",
+          "AUTH_FLOW": "${{ secrets.AUTH_FLOW }}",
+          "ADMIN_GROUP_NAME": "${{ secrets.ADMIN_GROUP_NAME }}",
+          "BUYER_GROUP_NAME": "${{ secrets.BUYER_GROUP_NAME }}",
+          "ADMIN_PERMISSIONS": "${{ secrets.ADMIN_PERMISSIONS }}",
+          "BUYER_PERMISSIONS": "${{ secrets.BUYER_PERMISSIONS }}"
+        }' > env.json
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -73,6 +63,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: us-east-1
 
-    - name: Clean up .env file
+    - name: Clean up env.json file
       if: success()
-      run: rm .env
+      run: rm env.json

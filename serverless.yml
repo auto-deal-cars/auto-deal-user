@@ -4,9 +4,16 @@ frameworkVersion: '3'
 useDotenv: true
 
 custom:
-  cognitoArn: ${env:COGNITO_ARN}
-  audienceIssuerUrl: ${env:AUDIENCE_ISSUER_URL}
-  audienceClientId: ${env:AUDIENCE_CLIENT_ID}
+  env: ${file(env.json)}
+  audienceIssuerUrl: ${self:custom.env.AUDIENCE_ISSUER_URL}
+  audienceClientId: ${self:custom.env.AUDIENCE_CLIENT_ID}
+  cognitoArn: ${self:custom.env.COGNITO_ARN}
+  cognitoUserPoolId: ${self:custom.env.COGNITO_USER_POOL_ID}
+  authFlow: ${self:custom.env.AUTH_FLOW}
+  adminGroupName: ${self:custom.env.ADMIN_GROUP_NAME}
+  buyerGroupName: ${self:custom.env.BUYER_GROUP_NAME}
+  adminPermissions: ${self:custom.env.ADMIN_PERMISSIONS}
+  buyerPermissions: ${self:custom.env.BUYER_PERMISSIONS}
 
 provider:
   name: aws
@@ -21,11 +28,15 @@ provider:
   timeout: 30
   deploymentMethod: direct
   environment:
-    ADMIN_PERMISSIONS: ${env:ADMIN_PERMISSIONS}
-    BUYER_PERMISSIONS: ${env:BUYER_PERMISSIONS}
+    ADMIN_PERMISSIONS: ${self:custom.adminPermissions}
+    BUYER_PERMISSIONS: ${self:custom.buyerPermissions}
     COGNITO_ARN: ${self:custom.cognitoArn}
     AUDIENCE_ISSUER_URL: ${self:custom.audienceIssuerUrl}
     AUDIENCE_CLIENT_ID: ${self:custom.audienceClientId}
+    COGNITO_USER_POOL_ID: ${self:custom.cognitoUserPoolId}
+    AUTH_FLOW: ${self:custom.authFlow}
+    ADMIN_GROUP_NAME: ${self:custom.adminGroupName}
+    BUYER_GROUP_NAME: ${self:custom.buyerGroupName}
   httpApi:
     cors: true
     authorizers:
