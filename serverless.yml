@@ -4,16 +4,15 @@ frameworkVersion: '3'
 useDotenv: true
 
 custom:
-  env: ${file(env.json)}
-  audienceIssuerUrl: ${self:custom.env.AUDIENCE_ISSUER_URL}
-  audienceClientId: ${self:custom.env.AUDIENCE_CLIENT_ID}
-  cognitoArn: ${self:custom.env.COGNITO_ARN}
-  cognitoUserPoolId: ${self:custom.env.COGNITO_USER_POOL_ID}
-  authFlow: ${self:custom.env.AUTH_FLOW}
-  adminGroupName: ${self:custom.env.ADMIN_GROUP_NAME}
-  buyerGroupName: ${self:custom.env.BUYER_GROUP_NAME}
-  adminPermissions: ${self:custom.env.ADMIN_PERMISSIONS}
-  buyerPermissions: ${self:custom.env.BUYER_PERMISSIONS}
+  audienceIssuerUrl: ${file(env.json):AUDIENCE_ISSUER_URL}
+  audienceClientId: ${file(env.json):AUDIENCE_CLIENT_ID}
+  cognitoArn: ${file(env.json):COGNITO_ARN}
+  cognitoUserPoolId: ${file(env.json):COGNITO_USER_POOL_ID}
+  authFlow: ${file(env.json):AUTH_FLOW}
+  adminGroupName: ${file(env.json):ADMIN_GROUP_NAME}
+  buyerGroupName: ${file(env.json):BUYER_GROUP_NAME}
+  adminPermissions: ${file(env.json):ADMIN_PERMISSIONS}
+  buyerPermissions: ${file(env.json):BUYER_PERMISSIONS}
 
 provider:
   name: aws
@@ -39,13 +38,13 @@ provider:
     BUYER_GROUP_NAME: ${self:custom.buyerGroupName}
   httpApi:
     cors: true
-    authorizers:
-      autoDealAuthorizer:
-        type: jwt
-        identitySource: $request.header.Authorization
-        issuerUrl: ${self:custom.audienceIssuerUrl}
-        audience:
-          - ${self:custom.audienceClientId}
+    # authorizers:
+    #   autoDealAuthorizer:
+    #     type: jwt
+    #     identitySource: $request.header.Authorization
+    #     issuerUrl: ${self:custom.audienceIssuerUrl}
+    #     audience:
+    #       - ${self:custom.audienceClientId}
   iam:
     role:
       statements:
@@ -93,9 +92,9 @@ functions:
       - httpApi:
           path: /user
           method: delete
-          authorizer:
-            name: autoDealAuthorizer
-            scopes: ["delete:user"]
+          # authorizer:
+          #   name: autoDealAuthorizer
+          #   scopes: ["delete:user"]
 
 resources:
   # Cognito
