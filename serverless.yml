@@ -16,20 +16,20 @@ provider:
   timeout: 30
   deploymentMethod: direct
   environment:
-    ADMIN_PERMISSIONS: ${env.ADMIN_PERMISSIONS}
-    BUYER_PERMISSIONS: ${env.BUYER_PERMISSIONS}
-    AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
-    AUDIENCE_CLIENT_ID: ${env.AUDIENCE_CLIENT_ID}
-    COGNITO_ARN: ${env.COGNITO_ARN}
+    ADMIN_PERMISSIONS: ${env:ADMIN_PERMISSIONS}
+    BUYER_PERMISSIONS: ${env:BUYER_PERMISSIONS}
+    AUDIENCE_ISSUER_URL: ${env:AUDIENCE_ISSUER_URL}
+    AUDIENCE_CLIENT_ID: ${env:AUDIENCE_CLIENT_ID}
+    COGNITO_ARN: ${env:COGNITO_ARN}
   httpApi:
     cors: true
     authorizers:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: ${env.AUDIENCE_ISSUER_URL}
+        issuerUrl: ${env:AUDIENCE_ISSUER_URL}
         audience:
-          - ${env.AUDIENCE_CLIENT_ID}
+          - ${env:AUDIENCE_CLIENT_ID}
   iam:
     role:
       statements:
@@ -41,7 +41,7 @@ provider:
             - cognito-idp:AdminSetUserPassword
             - cognito-idp:AdminDeleteUser
             - cognito-idp:AdminAddUserToGroup
-          Resource: ${env.COGNITO_ARN}
+          Resource: ${env:COGNITO_ARN}
   architecture: arm64
 
 functions:
