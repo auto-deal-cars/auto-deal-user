@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "serverless-openapi-documenter": "^0.0.104"
+  }
+}
