@@ -19,109 +19,37 @@ documentation:
     - name: "CreateUserRequest"
       description: "Create user request"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          email:
-            type: string
-            description: "User email"
-          password:
-            type: string
-            description: "User password"
-          first_name:
-            type: string
-            description: "User first name"
-          last_name:
-            type: string
-            description: "User last name"
-          address:
-            type: object
-            description: "User address"
-            properties:
-              zip_code:
-                type: string
-                description: "User zip code"
-              street_name:
-                type: string
-                description: "User street name"
-              street_number:
-                type: string
-                description: "User street number"
-              neighborhood:
-                type: string
-                description: "User neighborhood"
-              city:
-                type: string
-                description: "User city"
-              federal_unit:
-                type: string
-                description: "User federal unit"
+      schema: ${file(documentation/openapi/schemas/create-user-request.yml)}
 
     - name: "DeleteUserRequest"
       description: "Delete user request"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          email:
-            type: string
-            description: "User email"
+      schema: ${file(documentation/openapi/schemas/delete-user-request.yml)}
 
     - name: "LoginUserRequest"
       description: "Login user request"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          email:
-            type: string
-            description: "User email"
-          password:
-            type: string
-            description: "User password"
+      schema: ${file(documentation/openapi/schemas/login-user-request.yml)}
+
     - name: "ErrorResponse"
       description: "This is an error"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-          statusCode:
-            type: integer
+      schema: ${file(documentation/openapi/schemas/error-response.yml)}
 
     - name: "UserCreatedResponse"
       description: "User created response"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            description: "User created successfully"
+      schema: ${file(documentation/openapi/schemas/user-created.yml)}
 
     - name: "NewTokenGeneratedResponse"
       description: "New token generated response"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          access_token:
-            type: string
-          id_token:
-            type: string
-          refresh_token:
-            type: string
+      schema: ${file(documentation/openapi/schemas/new-token-generated.yml)}
 
     - name: "UserDeletedResponse"
       description: "User deleted response"
       contentType: "application/json"
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            description: "User deleted successfully"
+      schema: ${file(documentation/openapi/schemas/user-deleted.yml)}
 
 endpoints:
   create_user:
