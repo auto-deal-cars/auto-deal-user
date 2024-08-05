@@ -13,6 +13,7 @@ custom:
   buyerGroupName: ${file(env.json):BUYER_GROUP_NAME}
   adminPermissions: ${file(env.json):ADMIN_PERMISSIONS}
   buyerPermissions: ${file(env.json):BUYER_PERMISSIONS}
+  documentation: ${file(documentation/openapi/serverless.doc.yml):documentation}
 
 provider:
   name: aws
@@ -76,6 +77,7 @@ functions:
       - httpApi:
           path: /user
           method: post
+          documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.create_user}
   login_user:
     image:
       name: user
@@ -84,6 +86,7 @@ functions:
       - httpApi:
           path: /login
           method: post
+          documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.login_user}
   delete_user:
     image:
       name: user
@@ -95,6 +98,10 @@ functions:
           authorizer:
             name: autoDealAuthorizer
             scopes: ["delete:user"]
+          documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.delete_user}
+
+plugins:
+  - serverless-openapi-documenter
 
 resources:
   # Cognito

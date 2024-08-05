@@ -1,0 +1,36 @@
+type: object
+properties:
+  email:
+    type: string
+    description: "User email"
+  password:
+    type: string
+    description: "User password"
+  first_name:
+    type: string
+    description: "User first name"
+  last_name:
+    type: string
+    description: "User last name"
+  address:
+    type: object
+    description: "User address"
+    properties:
+      zip_code:
+        type: string
+        description: "User zip code"
+      street_name:
+        type: string
+        description: "User street name"
+      street_number:
+        type: string
+        description: "User street number"
+      neighborhood:
+        type: string
+        description: "User neighborhood"
+      city:
+        type: string
+        description: "User city"
+      federal_unit:
+        type: string
+        description: "User federal unit"

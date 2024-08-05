@@ -1,0 +1,131 @@
+documentation:
+  version: '1'
+  title: 'Auto Deal User'
+  description: 'API documentation for the Auto Deal User service'
+  securitySchemes:
+    my_authentication:
+      type: http
+      scheme: bearer
+      bearerFormat: http
+  security:
+    - my_authentication: []
+  servers:
+    - url: http://localhost/
+      description: Server for local development
+  tags:
+    - name: "User"
+      description: "User endpoints"
+  models:
+    - name: "CreateUserRequest"
+      description: "Create user request"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/create-user-request.yml)}
+
+    - name: "DeleteUserRequest"
+      description: "Delete user request"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/delete-user-request.yml)}
+
+    - name: "LoginUserRequest"
+      description: "Login user request"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/login-user-request.yml)}
+
+    - name: "ErrorResponse"
+      description: "This is an error"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/error-response.yml)}
+
+    - name: "UserCreatedResponse"
+      description: "User created response"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/user-created.yml)}
+
+    - name: "NewTokenGeneratedResponse"
+      description: "New token generated response"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/new-token-generated.yml)}
+
+    - name: "UserDeletedResponse"
+      description: "User deleted response"
+      contentType: "application/json"
+      schema: ${file(documentation/openapi/schemas/user-deleted.yml)}
+
+endpoints:
+  create_user:
+    summary: "Create user"
+    description: "Endpoint for creation of users. This endpoint will only create buyer users"
+    tags:
+      - "User"
+    requestBody:
+      description: "User creation request"
+    requestModels:
+      application/json: "CreateUserRequest"
+    methodResponses:
+      - statusCode: 201
+        responseBody:
+          description: "User created"
+        responseModels:
+          application/json: "UserCreatedResponse"
+      - statusCode: 409
+        responseBody:
+          description: "User already exists"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  delete_user:
+    summary: "Delete user"
+    description: "Endpoint responsible for deleting users. Only admins can delete users"
+    tags:
+      - "User"
+    requestBody:
+      description: "User deletion request"
+    requestModels:
+      application/json: "DeleteUserRequest"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "User deleted"
+        responseModels:
+          application/json: "UserDeletedResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  login_user:
+    summary: "Login user"
+    description: "Endpoint logging user. By passing the email and password, the user will receive a JWT token"
+    tags:
+    - "User"
+    requestBody:
+      description: "User login request"
+    requestModels:
+      application/json: "LoginUserRequest"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "User logged"
+        responseModels:
+          application/json: "NewTokenGeneratedResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
