@@ -39,8 +39,6 @@ Resources:
         - profile
         - email
       AllowedOAuthFlowsUserPoolClient: true
-      CallbackURLs:
-        - https://example.com
 
   CognitoUserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
