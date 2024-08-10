@@ -39,6 +39,8 @@ Resources:
         - profile
         - email
       AllowedOAuthFlowsUserPoolClient: true
+      CallbackURLs:
+        - https://auto-deal-api.com
 
   CognitoUserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
