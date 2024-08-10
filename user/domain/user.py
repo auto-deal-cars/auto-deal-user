@@ -1,6 +1,6 @@
 """User domain model."""
 from typing import Optional
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, Field, field_validator
 from user.domain.address import Address
 
 class User(BaseModel):
@@ -18,8 +18,5 @@ class User(BaseModel):
     def check_accepted_terms(cls, value):
         """Check if accepted_terms is true."""
         if not value:
-            raise ValidationError.from_exception_data(
-                title='accepted_terms must be True',
-                line_errors=['accepted_terms must be True']
-            )
+            raise ValueError('accepted_terms must be True')
         return value
