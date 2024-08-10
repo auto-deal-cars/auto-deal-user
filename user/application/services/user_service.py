@@ -18,7 +18,8 @@ class UserService:
             first_name=user_data['first_name'],
             last_name=user_data['last_name'],
             cpf=user_data['cpf'],
-            address=user_data['address']
+            address=user_data['address'],
+            accepted_terms=user_data['accepted_terms']
         )
 
         address = user_data['address']
@@ -37,7 +38,8 @@ class UserService:
                     'Value': json.dumps({
                         'first_name': user.first_name,
                         'last_name': user.last_name,
-                        'cpf': user.cpf
+                        'cpf': user.cpf,
+                        'accepted_terms': user.accepted_terms
                     })
                 },
                 {
