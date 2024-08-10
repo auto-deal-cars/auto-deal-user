@@ -18,5 +18,5 @@ class User(BaseModel):
     def check_accepted_terms(cls, value):
         """Check if accepted_terms is true."""
         if not value:
-            raise ValidationError('accepted_terms must be True')
+            raise ValidationError.from_exception_data('accepted_terms must be True')
         return value
