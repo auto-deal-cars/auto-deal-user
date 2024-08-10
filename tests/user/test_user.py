@@ -22,6 +22,7 @@ def user() -> User:
         password='password',
         cpf='12345678909',
         address=address,
+        accepted_terms=True
     )
 
 def test_user_model(user: User):
@@ -40,3 +41,4 @@ def test_user_model(user: User):
         street_number='123',
         zip_code='13000-000'
     )
+    assert user.accepted_terms is True
