@@ -13,6 +13,17 @@ def http_exception_handler(func: Callable):
         try:
             return func(*args, **kwargs)
         except ValidationError as error:
+            if (error.errors(include_url=False)[0] is not None and
+                error.errors(include_url=False)[0]['ctx'] is not None):
+                custom_error = error.errors(include_url=False)[0]['ctx']
+
+                return {
+                    'statusCode': 400,
+                    'body': json.dumps({
+                        'message': 'Validation error: check the error field for more details',
+                        'errors': str(custom_error['error'])
+                    })
+                }
             return {
                 'statusCode': 400,
                 'body': json.dumps({
@@ -31,13 +42,13 @@ def http_exception_handler(func: Callable):
             return {
                 'statusCode': 400,
                 'body': json.dumps({
-                    'message': 'Key error',
+                    'message': 'Validation error: check the error field for more details',
                     'error': str(error)
                 })
             }
-        except ValueError:
+        except ValueError as error:
             return {
-                'statusCode': 404,
+                'statusCode': 400,
                 'body': json.dumps({
                     'message': 'Key error',
                     'error': str(error)
