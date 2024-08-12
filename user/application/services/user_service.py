@@ -49,7 +49,8 @@ class UserService:
                         'street_number': address.get('street_number', ''),
                         'neighborhood': address.get('neighborhood', ''),
                         'zip_code': address.get('zip_code', ''),
-                        'federal_unit': address.get('federal_unit', '')
+                        'federal_unit': address.get('federal_unit', ''),
+                        'city': address.get('city', ''),
                     })
                 }
             ],
